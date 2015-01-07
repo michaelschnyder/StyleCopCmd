@@ -1,0 +1,5 @@
+packages/
+*.suo
+StyleCopCmd/StyleCop.Cache
+StyleCopCmd/bin/
+StyleCopCmd/obj/
