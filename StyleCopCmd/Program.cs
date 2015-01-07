@@ -4,11 +4,12 @@ using System.Diagnostics.CodeAnalysis;
 
 using StyleCop;
 
+using StyleCopCmd.Reader;
+
 namespace StyleCopCmd
 {
-    using System.Diagnostics;
-
-    using StyleCopCmd.Reader;
+    using System.IO;
+    using System.Linq;
 
     /// <summary>
     /// Simple example for running StyleCop environment.
@@ -24,14 +25,48 @@ namespace StyleCopCmd
         [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed. Suppression is OK here.")]
         public static void Main(string[] args)
         {
+            var options = new CommandLineOptions();
             var projects = new List<CsProject>();
 
-            var solutionFile = @"..\..\..\StyleCopCmd.sln";
-            
-            using (var reader = new SolutionReader(solutionFile))
+            if (CommandLine.Parser.Default.ParseArguments(args, options))
             {
-                var solution = reader.Read();
-                projects.AddRange(solution.Projects);
+                if (options.Solutions != null)
+                {
+                    foreach (var solutionFile in options.Solutions)
+                    {
+                        if (File.Exists(solutionFile))
+                        {
+                            using (var reader = new SolutionReader(solutionFile))
+                            {
+                                var solution = reader.Read();
+                                projects.AddRange(solution.Projects);
+                            }
+                        }
+                    }
+                }
+                
+                if (options.Projects != null)
+                {
+                    foreach (var projectFile in options.Projects)
+                    {
+                        if (File.Exists(projectFile))
+                        {
+                            using (var reader = new ProjectReader(projectFile))
+                            {
+                                var project = reader.Read();
+
+                                if (projects.All(p => p.Guid != project.Guid))
+                                {
+                                    projects.Add(project);
+                                }
+                                else
+                                {
+                                    // Ignored, already in list
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             var console = new StyleCopConsole(null, false, null, null, true);

@@ -37,11 +37,6 @@
       <HintPath>..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build" />
-    <Reference Include="Microsoft.Build.Conversion.v4.0" />
-    <Reference Include="Microsoft.Build.Engine" />
-    <Reference Include="Microsoft.Build.Framework" />
-    <Reference Include="Microsoft.Build.Tasks.v4.0" />
-    <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="Onion.SolutionParser.Parser">
       <HintPath>..\packages\Onion.SolutionParser.Parser.1.0.0.0\lib\net45\Onion.SolutionParser.Parser.dll</HintPath>
     </Reference>
@@ -63,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandLineOptions.cs" />
     <Compile Include="Reader\CsProject.cs" />
     <Compile Include="Reader\FileUtil.cs" />
     <Compile Include="Program.cs" />
