@@ -66,6 +66,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reader\SolutionReader.cs" />
     <Compile Include="Reader\VsSolution.cs" />
+    <Compile Include="Writer\NUnit\Model.cs" />
+    <Compile Include="Writer\NUnit\NUnitResultWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
