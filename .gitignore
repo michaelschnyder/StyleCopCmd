@@ -3,3 +3,4 @@ packages/
 StyleCopCmd/StyleCop.Cache
 StyleCopCmd/bin/
 StyleCopCmd/obj/
+*.user
