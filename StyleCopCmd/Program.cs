@@ -22,7 +22,6 @@ namespace StyleCopCmd
         /// <param name="args">
         /// The args.
         /// </param>
-        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed. Suppression is OK here.")]
         public static void Main(string[] args)
         {
             var options = new CommandLineOptions();
