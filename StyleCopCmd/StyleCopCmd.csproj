@@ -59,6 +59,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandLineOptions.cs" />
+    <Compile Include="Core\ExecutionContext.cs" />
+    <Compile Include="Core\ExecutionResult.cs" />
+    <Compile Include="Core\ExecutorLoggingEventArgs.cs" />
+    <Compile Include="Reporter\ConsoleReporter.cs" />
     <Compile Include="Core\IStyleCopIssueReporter.cs" />
     <Compile Include="Core\StyleCopExecutor.cs" />
     <Compile Include="Reader\CsProject.cs" />
@@ -68,8 +72,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reader\SolutionReader.cs" />
     <Compile Include="Reader\VsSolution.cs" />
-    <Compile Include="Writer\NUnit\Model.cs" />
-    <Compile Include="Writer\NUnit\NUnitResultWriter.cs" />
+    <Compile Include="Reporter\NUnit\Model.cs" />
+    <Compile Include="Reporter\NUnit\NUnitReporter.cs" />
+    <Compile Include="Reporter\NUnit\NUnitResultWriter.cs" />
+    <Compile Include="Reporter\StyleCopXmlReporter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

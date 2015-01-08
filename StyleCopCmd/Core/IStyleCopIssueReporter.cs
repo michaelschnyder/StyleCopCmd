@@ -1,7 +1,23 @@
-﻿namespace StyleCopCmd.Core
+﻿using StyleCopCmd.Reader;
+
+namespace StyleCopCmd.Core
 {
-    public interface IStyleCopIssueReporter
+    public abstract class StyleCopIssueReporter
     {
-        void Report(string message);
+        public virtual void Report(string message)
+        {
+        }
+
+        public virtual void ProjectAdded(CsProject project)
+        {
+        }
+
+        public virtual void Started()
+        {
+        }
+
+        public virtual void Completed(ExecutionResult result, string tempFileName)
+        {
+        }
     }
 }
