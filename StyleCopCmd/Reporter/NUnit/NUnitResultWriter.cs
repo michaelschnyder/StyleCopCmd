@@ -10,13 +10,21 @@ namespace StyleCopCmd.Reporter.NUnit
         public NUnitResultWriter(string outputFile)
         {
             this.outputFile = outputFile;
+
+            if (File.Exists(this.outputFile))
+            {
+                File.Delete(this.outputFile);
+            }
         }
 
-        public void Write()
+        public void Write(resultType root)
         {
-            var serializer = new XmlSerializer(typeof(resultsType));
+            var serializer = new XmlSerializer(typeof(resultType));
 
-            serializer.Serialize(new FileStream(this.outputFile, FileMode.CreateNew), new resultsType());
+            using (var stream = new FileStream(this.outputFile, FileMode.Create))
+            {
+                serializer.Serialize(stream, root);
+            }
         }
     }
 }

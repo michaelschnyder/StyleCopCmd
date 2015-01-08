@@ -7,6 +7,7 @@ using StyleCopCmd.Core;
 
 using StyleCopCmd.Reader;
 using StyleCopCmd.Reporter;
+using StyleCopCmd.Reporter.NUnit;
 
 namespace StyleCopCmd
 {
@@ -42,6 +43,11 @@ namespace StyleCopCmd
                 if (!string.IsNullOrEmpty(options.StyleCopXml))
                 {
                     executor.AddReporter(new StyleCopXmlReporter(options.StyleCopXml));
+                }
+
+                if (!string.IsNullOrEmpty(options.NUnitXml))
+                {
+                    executor.AddReporter(new NUnitReporter(options.NUnitXml));
                 }
 
                 executor.WarningsAsErrors = options.WarningsAsErrors;

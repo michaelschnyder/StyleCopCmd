@@ -46,6 +46,7 @@ namespace StyleCopCmd.Core
             {
                 try
                 {
+                    reporter.Result(args);
                     reporter.Report(string.Format("[{0}] {1} ({2}) in '{3}:{4}'", args.Warning ? "WARN" : "ERROR", args.Message, args.Violation.Rule.CheckId, args.Element.Document.SourceCode.Name, args.LineNumber));
                 }
                 catch (Exception e)

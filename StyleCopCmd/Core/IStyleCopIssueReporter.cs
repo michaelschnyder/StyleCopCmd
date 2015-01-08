@@ -1,4 +1,6 @@
-﻿using StyleCopCmd.Reader;
+﻿using StyleCop;
+
+using StyleCopCmd.Reader;
 
 namespace StyleCopCmd.Core
 {
@@ -16,7 +18,16 @@ namespace StyleCopCmd.Core
         {
         }
 
+        public virtual void Result(ViolationEventArgs @event)
+        {
+        }
+
         public virtual void Completed(ExecutionResult result, string tempFileName)
+        {
+            this.Completed(result);
+        }
+
+        public virtual void Completed(ExecutionResult result)
         {
         }
     }
