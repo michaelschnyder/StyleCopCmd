@@ -1,8 +1,7 @@
 ﻿using System.IO;
+using System.Xml.Serialization;
 
 using StyleCopCmd.Writer.NUnit.Model;
-
-using System.Xml.Serialization;
 
 namespace StyleCopCmd.Writer.NUnit
 {
