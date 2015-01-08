@@ -1,9 +1,7 @@
 ﻿using System.IO;
 using System.Xml.Serialization;
 
-using StyleCopCmd.Writer.NUnit.Model;
-
-namespace StyleCopCmd.Writer.NUnit
+namespace StyleCopCmd.Reporter.NUnit
 {
     public class NUnitResultWriter
     {
