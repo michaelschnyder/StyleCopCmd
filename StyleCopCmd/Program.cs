@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 using StyleCop;
 
@@ -8,8 +8,7 @@ using StyleCopCmd.Reader;
 
 namespace StyleCopCmd
 {
-    using System.IO;
-    using System.Linq;
+    using StyleCopCmd.Core;
 
     /// <summary>
     /// Simple example for running StyleCop environment.
@@ -26,7 +25,10 @@ namespace StyleCopCmd
         public static void Main(string[] args)
         {
             var options = new CommandLineOptions();
-            var projects = new List<CsProject>();
+
+            var executore = new StyleCopExecutor();
+
+            executore.AddReporter(new ConsoleResultAdapter());
 
             if (CommandLine.Parser.Default.ParseArguments(args, options))
             {
@@ -39,7 +41,10 @@ namespace StyleCopCmd
                             using (var reader = new SolutionReader(solutionFile))
                             {
                                 var solution = reader.Read();
-                                projects.AddRange(solution.Projects);
+                                foreach (var project in solution.Projects)
+                                {
+                                    executore.AddProject(project);
+                                }
                             }
                         }
                     }
@@ -54,42 +59,14 @@ namespace StyleCopCmd
                             using (var reader = new ProjectReader(projectFile))
                             {
                                 var project = reader.Read();
-
-                                if (projects.All(p => p.Guid != project.Guid))
-                                {
-                                    projects.Add(project);
-                                }
-                                else
-                                {
-                                    // Ignored, already in list
-                                }
+                                executore.AddProject(project);
                             }
                         }
                     }
                 }
             }
 
-            var console = new StyleCopConsole(null, false, null, null, true);
-            var codeProjects = new List<CodeProject>();
-
-            var projectIndex = 0;
-            foreach (var csProject in projects)
-            {
-                var codeProject = new CodeProject(projectIndex++, csProject.Directory, new Configuration(null));
-
-                foreach (var file in csProject.Files)
-                {
-                    console.Core.Environment.AddSourceCode(codeProject, file.FullName, null);
-                }
-
-                codeProjects.Add(codeProject);
-            }
-
-            console.ViolationEncountered += OnViolationEncountered;
-            
-            console.Start(codeProjects, true);
-
-            console.ViolationEncountered -= OnViolationEncountered;
+            executore.Run();
 
 #if (DEBUG)
 {  
@@ -98,10 +75,13 @@ namespace StyleCopCmd
 }
 #endif
         }
+    }
 
-        private static void OnViolationEncountered(object sender, ViolationEventArgs e)
+    public class ConsoleResultAdapter : IStyleCopIssueReporter
+    {
+        public void Report(string message)
         {
-            Console.WriteLine("[{0}:{1}] {2} {3}", e.Element.Document.SourceCode.Name, e.LineNumber, e.Violation.Rule.CheckId, e.Message);
+            Console.WriteLine(message);
         }
     }
 }
