@@ -7,7 +7,9 @@ namespace StyleCopCmd.Reporter
 {
     public class ConsoleReporter : StyleCopIssueReporter
     {
-        private int windowWidth = 150;
+        private readonly int windowWidth = 150;
+
+        private readonly bool hasConsole = false;
 
         public ConsoleReporter()
         {
@@ -16,6 +18,7 @@ namespace StyleCopCmd.Reporter
                 if (Console.CursorVisible)
                 {
                     this.windowWidth = Console.WindowWidth;
+                    this.hasConsole = true;
                 }
             }
             catch (Exception)
@@ -40,9 +43,23 @@ namespace StyleCopCmd.Reporter
 
         public override void Completed(ExecutionResult result, string tempFileName)
         {
-            Console.Write(string.Empty.PadRight(this.windowWidth).Replace(' ', '-'));
+            this.ConsoleHorizontalLine();
             Console.WriteLine("Errors:   {0}", result.ErrorsCount);
             Console.WriteLine("Warnings: {0}", result.WarningsCount);
+        }
+
+        private void ConsoleHorizontalLine()
+        {
+            string line = string.Empty.PadRight(this.windowWidth).Replace(' ', '-');
+
+            if (this.hasConsole)
+            {
+                Console.Write(line);
+            }
+            else
+            {
+                Console.WriteLine(line);
+            }
         }
     }
 }
