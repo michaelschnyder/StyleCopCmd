@@ -19,5 +19,11 @@ namespace StyleCopCmd.Reader
         public List<FileInfo> Files { get; set; }
 
         public Guid Guid { get; set; }
+        
+        public string File { get; set; }
+        
+        public string RootNamespace { get; set; }
+        
+        public string AssemblyName { get; set; }
     }
 }
