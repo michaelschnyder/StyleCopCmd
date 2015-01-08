@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
+using StyleCopCmd.Core;
+
 using StyleCopCmd.Reader;
 using StyleCopCmd.Reporter;
 
 namespace StyleCopCmd
 {
-    using StyleCopCmd.Core;
-
     /// <summary>
     /// Simple example for running StyleCop environment.
     /// </summary>
@@ -91,6 +91,7 @@ namespace StyleCopCmd
 #if (DEBUG)
             if (Debugger.IsAttached) 
             {
+                Console.WriteLine();
                 Console.Write("#ifdebug: ExitCode: {0}. Press any key to exit...", exitCode);
                 Console.ReadKey();
             }
