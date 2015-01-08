@@ -6,7 +6,6 @@ namespace StyleCopCmd.Reporter.NUnit
     {
         public NUnitReporter(string fileName)
         {
-            
         }
     }
 }
