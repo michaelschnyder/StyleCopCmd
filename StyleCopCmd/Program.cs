@@ -39,6 +39,11 @@ namespace StyleCopCmd
                     executor.AddReporter(new ConsoleReporter());
                 }
 
+                if (!string.IsNullOrEmpty(options.StyleCopXml))
+                {
+                    executor.AddReporter(new StyleCopXmlReporter(options.StyleCopXml));
+                }
+
                 executor.WarningsAsErrors = options.WarningsAsErrors;
             }
 
