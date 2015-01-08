@@ -25,8 +25,8 @@ namespace StyleCopCmd
         [Option('w', "strict", DefaultValue = true, HelpText = "Count warnings as errors")]
         public bool WarningsAsErrors { get; set; }
 
-        [Option('l', "logOnly", DefaultValue = true, HelpText = "Only log to all reporters but dont return an error code on exit")]
-        public bool LogOnly { get; set; }
+        [Option('d', "exitCode", HelpText = "Not only log to all reporters, in addition return an error code on exit if and violations has occured")]
+        public bool EnableExitCode { get; set; }
 
         [HelpOption]
         public string GetUsage()

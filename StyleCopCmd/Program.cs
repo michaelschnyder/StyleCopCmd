@@ -44,7 +44,7 @@ namespace StyleCopCmd
 
             var result = executor.Run();
 
-            if (options.LogOnly || !(result.HasErrors || (options.WarningsAsErrors && result.HasWarnings)))
+            if (!options.EnableExitCode || !(result.HasErrors || (options.WarningsAsErrors && result.HasWarnings)))
             {
                 QuitApplication(0);
             }
@@ -92,10 +92,11 @@ namespace StyleCopCmd
             if (Debugger.IsAttached) 
             {
                 Console.WriteLine();
-                Console.Write("#ifdebug: ExitCode: {0}. Press any key to exit...", exitCode);
+                Console.Write("#ifdebug: ExitCode would be {0}. Press any key to exit...", exitCode);
                 Console.ReadKey();
             }
 #endif
+            Environment.Exit(exitCode);
         }
 
         private static void AddProjectFiles(IEnumerable<string> projectFiles, StyleCopExecutor executore)
