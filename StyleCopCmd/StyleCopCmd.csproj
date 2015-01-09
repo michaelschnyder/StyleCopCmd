@@ -91,6 +91,9 @@
     <Compile Include="Reporter\NUnit\NUnitReporter.cs" />
     <Compile Include="Reporter\NUnit\NUnitResultWriter.cs" />
     <Compile Include="Reporter\StyleCopXmlReporter.cs" />
+    <Compile Include="Reporter\TeamCity\InfoModel.cs" />
+    <Compile Include="Reporter\TeamCity\TeamCityInfoReporter.cs" />
+    <Compile Include="Reporter\TeamCity\TeamCityMessageReporter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

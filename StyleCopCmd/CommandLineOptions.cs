@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using CommandLine;
 using CommandLine.Text;
@@ -30,6 +31,12 @@ namespace StyleCopCmd
 
         [Option("nUnitXml", HelpText = "Specify a file to which the results should be saved in NUnitTestXml-Format")]
         public string NUnitXml { get; set; }
+
+        [Option("tcXml", HelpText = "Specify a file to which the results should be saved in TeamCityInfo-Format")]
+        public string TeamCityXml { get; set; }
+
+        [Option("tcMessage", HelpText = "Send the results via teamcity services messages")]
+        public bool TeamCityMessage { get; set; }
 
         [HelpOption]
         public string GetUsage()
