@@ -694,6 +694,7 @@ namespace StyleCopCmd.Reporter.NUnit
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(TypeName = "test-results")]
     [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = true)]
     public partial class resultType
     {
