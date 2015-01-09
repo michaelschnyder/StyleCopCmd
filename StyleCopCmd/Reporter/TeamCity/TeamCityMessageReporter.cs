@@ -1,6 +1,7 @@
 ﻿namespace StyleCopCmd.Reporter.TeamCity
 {
-    // See: http://blog.jonnyzzz.name/2012/12/teeamcityservicemessages-v30.html
+    // U/se?: http://blog.jonnyzzz.name/2012/12/teeamcityservicemessages-v30.html
+    // And more: https://confluence.jetbrains.com/display/TCD7/Build+Script+Interaction+with+TeamCity#BuildScriptInteractionwithTeamCity-ReportingBuildProgress
     public class TeamCityMessageReporter
     {
     }
