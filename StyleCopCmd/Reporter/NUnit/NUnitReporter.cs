@@ -37,14 +37,14 @@ namespace StyleCopCmd.Reporter.NUnit
 
                     testsuite = new testsuiteType
                         {
-                            name = "StyleCop",
-                            type = "Assembly",
+                            name = "All",
+                            type = "Namespace",
                             executed = "false",
                             result = "Failure",
                             success = "false",
                             results = new resultsType()
                         }
-                };
+                        };
         }
 
         public override void Started()
@@ -57,14 +57,45 @@ namespace StyleCopCmd.Reporter.NUnit
 
         public override void Result(ViolationEventArgs @event)
         {
+
+            var items = new List<testcaseType>();
+            if (this.root.testsuite.results.Items != null)
+            {
+                items = this.root.testsuite.results.Items.Cast<testcaseType>().ToList();
+            }
+
+            items.Add(new testcaseType()
+                {
+                    name = @event.Violation.Rule.Name,
+                    description = string.Format("{0}:{1} {2}", @event.SourceCode.Path, @event.LineNumber, @event.Message),
+                    asserts = "0",
+                    executed = "true",
+                    result = "Failure",
+                    success = "False",
+                    Item = new failureType()
+                               {
+                                   message = @event.Message,
+                                   stacktrace = @event.SourceCode.Path
+                               }
+                });
+
+            this.root.testsuite.results.Items = items.Cast<object>().ToArray();
+
+            this.root.errors++;
+            this.root.failures++;
+            this.root.total++;
+
+            return;
+
             if (!@event.Warning)
             {
-                this.root.errors++;
-                this.root.failures++;
+                // this.root.errors++;
+                // this.root.failures++;
+                // this.root.total++;
             }
             else
             {
-                this.root.ignored++;
+                // this.root.ignored++;
             }
 
             // Organize the viaolation inside test-suites (top level is the Namespace)
@@ -94,7 +125,7 @@ namespace StyleCopCmd.Reporter.NUnit
             {
                 suiteForRule = new testsuiteType()
                     {
-                        type = "TestFixture",
+                        type = "Namespace",
                         executed = "false",
                         result = "Failure",
                         success = "false",
@@ -117,9 +148,9 @@ namespace StyleCopCmd.Reporter.NUnit
                     name = @event.Violation.Rule.Name,
                     description = string.Format("{0}:{1} {2}", @event.SourceCode.Path, @event.LineNumber, @event.Message),
                     asserts = "0",
-                    executed = "false",
-                    result = "Failure",
-                    success = "false",
+                    executed = "true",
+                    result = "Error",
+                    success = "False"
                 });
 
             suiteForRule.results.Items = currentTestCases.Cast<object>().ToArray();
@@ -133,19 +164,21 @@ namespace StyleCopCmd.Reporter.NUnit
             this.root.testsuite.success = "false";
             this.root.testsuite.result = "Failure";
 
+            /*
             foreach (var suiteForNameSpace in this.testSuites)
             {
                 var castedSuitesForRule = suiteForNameSpace.results.Items.Cast<testsuiteType>().ToList();
                 castedSuitesForRule.ForEach(ts => ts.executed = "true");
                 suiteForNameSpace.executed = "true";
             }
+            */
 
             this.Save();
         }
 
         private void Save()
         {
-            this.root.testsuite.results.Items = this.testSuites.Cast<object>().ToArray();
+            //this.root.testsuite.results.Items = this.testSuites.Cast<object>().ToArray();
             this.writer.Write(this.root);
         }
     }
