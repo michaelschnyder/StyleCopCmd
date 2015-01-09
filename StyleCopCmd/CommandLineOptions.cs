@@ -22,7 +22,7 @@ namespace StyleCopCmd
         [Option('d', "exitCode", HelpText = "Not only log to all reporters, in addition return an error code on exit if and violations has occured")]
         public bool EnableExitCode { get; set; }
 
-        [Option('c', "console", DefaultValue = true, HelpText = "Report errors and warnings to console")]
+        [Option('c', "console", DefaultValue = false, HelpText = "Report errors and warnings to console")]
         public bool Console { get; set; }
 
         [Option("styleCopXml", HelpText = "Specify a file to which the results should be saved in StyleCopXml-Format (ValidationResults.xml)")]
