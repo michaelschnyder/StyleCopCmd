@@ -25,8 +25,23 @@ namespace StyleCopCmd.Reporter.NUnit
 
             this.root = new resultType
                 {
+                    name = "StyleCopTest-Results",
+                    environment = new environmentType()
+                                      {
+                                          machinename = Environment.MachineName,
+                                          osversion = Environment.OSVersion.VersionString,
+                                          nunitversion = "2.6.0.12035",
+                                          user = Environment.UserName,
+                                          userdomain = Environment.UserDomainName
+                                          },
+
                     testsuite = new testsuiteType
                         {
+                            name = "StyleCop",
+                            type = "Assembly",
+                            executed = "false",
+                            result = "Failure",
+                            success = "false",
                             results = new resultsType()
                         }
                 };
@@ -37,7 +52,7 @@ namespace StyleCopCmd.Reporter.NUnit
             this.root.date = DateTime.Now.ToString("yyy-MM-dd");
             this.root.time = DateTime.Now.ToString("HH:mm:ss");
 
-            this.writer.Write(this.root);
+            // this.Save();
         }
 
         public override void Result(ViolationEventArgs @event)
@@ -45,13 +60,12 @@ namespace StyleCopCmd.Reporter.NUnit
             if (!@event.Warning)
             {
                 this.root.errors++;
+                this.root.failures++;
             }
             else
             {
                 this.root.ignored++;
             }
-
-            this.root.total++;
 
             // Organize the viaolation inside test-suites (top level is the Namespace)
             var suiteForNameSpace = this.testSuites.FirstOrDefault(s => s.name == @event.Violation.Rule.Namespace);
@@ -60,6 +74,10 @@ namespace StyleCopCmd.Reporter.NUnit
                 suiteForNameSpace = new testsuiteType()
                     {
                         name = @event.Violation.Rule.Namespace, 
+                        type = "Namespace",
+                        executed = "false",
+                        result = "Failure",
+                        success = "false",
                         results = new resultsType()
                                       {
                                           Items = new List<testsuiteType>().Cast<object>().ToArray()
@@ -76,6 +94,10 @@ namespace StyleCopCmd.Reporter.NUnit
             {
                 suiteForRule = new testsuiteType()
                     {
+                        type = "TestFixture",
+                        executed = "false",
+                        result = "Failure",
+                        success = "false",
                         name = @event.Violation.Rule.Name,
                         results =
                             new resultsType()
@@ -92,20 +114,32 @@ namespace StyleCopCmd.Reporter.NUnit
 
             currentTestCases.Add(new testcaseType()
                 {
-                    name = @event.Element.FullyQualifiedName,
+                    name = @event.Violation.Rule.Name,
                     description = string.Format("{0}:{1} {2}", @event.SourceCode.Path, @event.LineNumber, @event.Message),
-                    executed = "True",
+                    asserts = "0",
+                    executed = "false",
                     result = "Failure",
-                    success = "False"
+                    success = "false",
                 });
 
             suiteForRule.results.Items = currentTestCases.Cast<object>().ToArray();
 
-            this.Save();
+            // this.Save();
         }
 
         public override void Completed(ExecutionResult result)
         {
+            this.root.testsuite.executed = "true";
+            this.root.testsuite.success = "false";
+            this.root.testsuite.result = "Failure";
+
+            foreach (var suiteForNameSpace in this.testSuites)
+            {
+                var castedSuitesForRule = suiteForNameSpace.results.Items.Cast<testsuiteType>().ToList();
+                castedSuitesForRule.ForEach(ts => ts.executed = "true");
+                suiteForNameSpace.executed = "true";
+            }
+
             this.Save();
         }
 
