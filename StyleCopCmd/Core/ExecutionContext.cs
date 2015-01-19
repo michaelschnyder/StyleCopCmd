@@ -35,10 +35,12 @@ namespace StyleCopCmd.Core
 
             if (args.Warning)
             {
+                this.result.Warnings.Add(args);
                 this.result.WarningsCount++;
             }
             else
             {
+                this.result.Errors.Add(args);
                 this.result.ErrorsCount++;
             }
 

@@ -1,4 +1,8 @@
-﻿namespace StyleCopCmd.Core
+﻿using System.Collections.Generic;
+
+using StyleCop;
+
+namespace StyleCopCmd.Core
 {
     public class ExecutionResult
     {
@@ -15,5 +19,15 @@
         public long WarningsCount { get; set; }
         
         public long ErrorsCount { get; set; }
+
+        public List<ViolationEventArgs> Errors { get; set; }
+        
+        public List<ViolationEventArgs> Warnings { get; set; }
+
+        public ExecutionResult()
+        {
+            this.Errors = new List<ViolationEventArgs>();
+            this.Warnings = new List<ViolationEventArgs>();
+        }
     }
 }
