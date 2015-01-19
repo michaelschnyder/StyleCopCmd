@@ -10,17 +10,14 @@ namespace StyleCopCmd.Reporter.NUnit
 {
     public class NUnitReporter : StyleCopIssueReporter
     {
-        private readonly string fileName;
+        private readonly NUnitResultWriter writer;
 
-        private NUnitResultWriter writer;
+        private readonly resultType root;
 
-        private resultType root;
-
-        private List<testsuiteType> testSuites = new List<testsuiteType>();
+        private readonly List<testsuiteType> testSuites = new List<testsuiteType>();
 
         public NUnitReporter(string fileName)
         {
-            this.fileName = fileName;
             this.writer = new NUnitResultWriter(fileName);
 
             this.root = new resultType
@@ -30,7 +27,6 @@ namespace StyleCopCmd.Reporter.NUnit
                                       {
                                           machinename = Environment.MachineName,
                                           osversion = Environment.OSVersion.VersionString,
-                                          nunitversion = "2.6.0.12035",
                                           user = Environment.UserName,
                                           userdomain = Environment.UserDomainName
                                           },
@@ -38,10 +34,10 @@ namespace StyleCopCmd.Reporter.NUnit
                     testsuite = new testsuiteType
                         {
                             name = "All",
-                            type = "Namespace",
-                            executed = "false",
+                            type = "StyleCop",
+                            executed = "True",
                             result = "Failure",
-                            success = "false",
+                            success = "True",
                             results = new resultsType()
                         }
                         };
@@ -52,51 +48,14 @@ namespace StyleCopCmd.Reporter.NUnit
             this.root.date = DateTime.Now.ToString("yyy-MM-dd");
             this.root.time = DateTime.Now.ToString("HH:mm:ss");
 
-            // this.Save();
+            this.Save();
         }
 
         public override void Result(ViolationEventArgs @event)
         {
-
-            var items = new List<testcaseType>();
-            if (this.root.testsuite.results.Items != null)
-            {
-                items = this.root.testsuite.results.Items.Cast<testcaseType>().ToList();
-            }
-
-            items.Add(new testcaseType()
-                {
-                    name = @event.Violation.Rule.Name,
-                    description = string.Format("{0}:{1} {2}", @event.SourceCode.Path, @event.LineNumber, @event.Message),
-                    asserts = "0",
-                    executed = "true",
-                    result = "Failure",
-                    success = "False",
-                    Item = new failureType()
-                               {
-                                   message = @event.Message,
-                                   stacktrace = @event.SourceCode.Path
-                               }
-                });
-
-            this.root.testsuite.results.Items = items.Cast<object>().ToArray();
-
             this.root.errors++;
             this.root.failures++;
             this.root.total++;
-
-            return;
-
-            if (!@event.Warning)
-            {
-                // this.root.errors++;
-                // this.root.failures++;
-                // this.root.total++;
-            }
-            else
-            {
-                // this.root.ignored++;
-            }
 
             // Organize the viaolation inside test-suites (top level is the Namespace)
             var suiteForNameSpace = this.testSuites.FirstOrDefault(s => s.name == @event.Violation.Rule.Namespace);
@@ -126,9 +85,9 @@ namespace StyleCopCmd.Reporter.NUnit
                 suiteForRule = new testsuiteType()
                     {
                         type = "Namespace",
-                        executed = "false",
+                        executed = "False",
                         result = "Failure",
-                        success = "false",
+                        success = "False",
                         name = @event.Violation.Rule.Name,
                         results =
                             new resultsType()
@@ -148,37 +107,35 @@ namespace StyleCopCmd.Reporter.NUnit
                     name = @event.Violation.Rule.Name,
                     description = string.Format("{0}:{1} {2}", @event.SourceCode.Path, @event.LineNumber, @event.Message),
                     asserts = "0",
-                    executed = "true",
+                    executed = "True",
                     result = "Error",
                     success = "False"
                 });
 
             suiteForRule.results.Items = currentTestCases.Cast<object>().ToArray();
 
-            // this.Save();
+            this.Save();
         }
 
         public override void Completed(ExecutionResult result)
         {
-            this.root.testsuite.executed = "true";
-            this.root.testsuite.success = "false";
+            this.root.testsuite.executed = "True";
+            this.root.testsuite.success = "False";
             this.root.testsuite.result = "Failure";
 
-            /*
             foreach (var suiteForNameSpace in this.testSuites)
             {
                 var castedSuitesForRule = suiteForNameSpace.results.Items.Cast<testsuiteType>().ToList();
-                castedSuitesForRule.ForEach(ts => ts.executed = "true");
+                castedSuitesForRule.ForEach(ts => ts.executed = "True");
                 suiteForNameSpace.executed = "true";
             }
-            */
 
             this.Save();
         }
 
         private void Save()
         {
-            //this.root.testsuite.results.Items = this.testSuites.Cast<object>().ToArray();
+            this.root.testsuite.results.Items = this.testSuites.Cast<object>().ToArray();
             this.writer.Write(this.root);
         }
     }
