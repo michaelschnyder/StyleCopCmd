@@ -86,7 +86,7 @@ namespace StyleCopCmd.Reporter.TeamCity
                 
                 using (var test = nameSpaceAsSuite.OpenTest(testName))
                 {
-                    test.WriteFailed(string.Format("{0}: {1} ({2})", styleCopId, text, styleCopNameSpace), string.Format("Reason:{0}\n\nFile: {1}\n\nSee: {2} for further explanation", detail, path, ruleUrl));
+                    test.WriteFailed(string.Format("{0}: {1} ({2})", styleCopId, text, styleCopNameSpace), string.Format("Reason: {0}\n\nFile: {1}\n\nSee: {2} for further explanation", detail, path, ruleUrl));
                 }
             }
         }
