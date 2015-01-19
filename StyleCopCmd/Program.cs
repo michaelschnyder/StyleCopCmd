@@ -8,6 +8,7 @@ using StyleCopCmd.Core;
 using StyleCopCmd.Reader;
 using StyleCopCmd.Reporter;
 using StyleCopCmd.Reporter.NUnit;
+using StyleCopCmd.Reporter.TeamCity;
 
 namespace StyleCopCmd
 {
@@ -48,6 +49,11 @@ namespace StyleCopCmd
                 if (!string.IsNullOrEmpty(options.NUnitXml))
                 {
                     executor.AddReporter(new NUnitReporter(options.NUnitXml));
+                }
+
+                if (options.TeamCityServiceMessages)
+                {
+                    executor.AddReporter(new TeamCityMessageReporter());
                 }
 
                 executor.WarningsAsErrors = options.WarningsAsErrors;
