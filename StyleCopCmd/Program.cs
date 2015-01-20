@@ -27,14 +27,11 @@ namespace StyleCopCmd
         {
             var options = new CommandLineOptions();
 
-            var executor = new StyleCopExecutor();
-
-            executor.Logging += ExecutorOnLogging;
-
-            if (CommandLine.Parser.Default.ParseArguments(args, options))
+            if (args != null && args.Length > 0 && CommandLine.Parser.Default.ParseArguments(args, options))
             {
-                AddProjectsFromSolutionFiles(options.Solutions, executor);
-                AddProjectFiles(options.Projects, executor);
+                var executor = new StyleCopExecutor();
+
+                executor.Logging += ExecutorOnLogging;
 
                 if (options.Console)
                 {
@@ -56,19 +53,24 @@ namespace StyleCopCmd
                     executor.AddReporter(new TeamCityMessageReporter());
                 }
 
+                AddProjectsFromSolutionFiles(options.Solutions, executor);
+                AddProjectFiles(options.Projects, executor);
+
                 executor.WarningsAsErrors = options.WarningsAsErrors;
+
+                var result = executor.Run();
+
+                if (!options.EnableExitCode || !(result.HasErrors || (options.WarningsAsErrors && result.HasWarnings)))
+                {
+                    QuitApplication(0);
+                }
+                else
+                {
+                    QuitApplication(1);
+                }
             }
 
-            var result = executor.Run();
-
-            if (!options.EnableExitCode || !(result.HasErrors || (options.WarningsAsErrors && result.HasWarnings)))
-            {
-                QuitApplication(0);
-            }
-            else
-            {
-                QuitApplication(1);
-            }
+            Console.WriteLine(options.GetUsage());
         }
 
         private static void ExecutorOnLogging(object sender, ExecutorLoggingEventArgs executorLoggingEventArgs)
