@@ -6,14 +6,10 @@ namespace StyleCopCmd.Core
 {
     public class ExecutionResult
     {
-        public bool HasWarnings
+        public ExecutionResult()
         {
-            get { return this.WarningsCount > 0; }
-        }
-
-        public bool HasErrors
-        {
-            get { return this.ErrorsCount > 0; }
+            this.Errors = new List<ViolationEventArgs>();
+            this.Warnings = new List<ViolationEventArgs>();
         }
 
         public long WarningsCount { get; set; }
@@ -24,10 +20,14 @@ namespace StyleCopCmd.Core
         
         public List<ViolationEventArgs> Warnings { get; set; }
 
-        public ExecutionResult()
+        public bool HasWarnings
         {
-            this.Errors = new List<ViolationEventArgs>();
-            this.Warnings = new List<ViolationEventArgs>();
+            get { return this.WarningsCount > 0; }
+        }
+
+        public bool HasErrors
+        {
+            get { return this.ErrorsCount > 0; }
         }
     }
 }
